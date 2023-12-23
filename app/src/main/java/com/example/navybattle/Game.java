@@ -2,8 +2,6 @@ package com.example.navybattle;
 
 
 import java.util.ArrayList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.MotionEvent;
 import android.graphics.Canvas;
 
@@ -13,60 +11,56 @@ public class Game {
 
     private ArrayList<Asset> assets = new ArrayList();
     private ArrayList<Projectile> projectiles = new ArrayList();
-    private Bitmap boatBitmap1;
-    private Bitmap boatBitmap2;
-    private Bitmap helicopterBitmap1;
-    private Bitmap helicopterBitmap2;
 
     public Game(GameSurface gameSurface) {
 
         // Keep track of GameSurface.
         this.gameSurface = gameSurface;
 
-        // Load all the bitmaps.
-        this.boatBitmap1 = BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.boat1);
-        this.boatBitmap1 = BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.boat2);
-        this.helicopterBitmap1 = BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.helicopter1);
-        this.helicopterBitmap2 = BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.helicopter2);
-
-
         // Testing.
-        this.assets.add(new Boat(gameSurface, this.boatBitmap1, 200, 600));
+        this.assets.add(new Boat(gameSurface, "left"));
+        this.assets.add(new Boat(gameSurface, "right"));
 
     }
 
 
-    public void deleteAssets() {
+    public void deleteOutOfScreen() {
         for(int i=0; i<this.assets.size(); ++i) {
 
             // Remove asset if out of screen.
-            if(this.assets.get(i).getX() < 0 ||
-               this.assets.get(i).getX() > this.gameSurface.getWidth()) {
+            if(this.assets.get(i).x < 0 ||
+               this.assets.get(i).x > this.gameSurface.getWidth()) {
                 this.assets.remove(i);
             }
 
             // Remove asset if no health.
-            if(this.assets.get(i).getHealth() <= 0) {
+            if(this.assets.get(i).health <= 0) {
                 this.assets.remove(i);
+            }
+        }
+
+        for(int i=0; i<this.projectiles.size(); ++i) {
+
+            // Remove asset if out of screen.
+            if(this.projectiles.get(i).x < 0 ||
+                    this.projectiles.get(i).x > this.gameSurface.getWidth()) {
+                this.projectiles.remove(i);
             }
         }
 
     }
 
-    public void deleteProjectiles() {
-
-    }
-
-
     public boolean onTouchEvent(MotionEvent event) {
+
+        // If screen is pressed
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
             if(x < this.gameSurface.getWidth() / 2)
-                this.assets.add(new Boat(this.gameSurface, this.boatBitmap1, 200, 600));
+                this.assets.add(new Boat(this.gameSurface, "left"));
             else
-                this.assets.add(new Helicopter(this.gameSurface, this.helicopterBitmap1, 200, 600));
+                this.assets.add(new Boat(this.gameSurface, "right"));
 
             return true;
         }
@@ -76,13 +70,24 @@ public class Game {
 
     public void update() {
         for(Asset asset : this.assets) {
-            asset.update();
+            Projectile ret = asset.update(this.assets);
+            if(ret != null) {
+                this.projectiles.add(ret);
+            }
         }
+        for(int i=0; i<this.projectiles.size(); ++i) {
+            if(projectiles.get(i).update())
+                this.projectiles.remove(i);
+        }
+
     }
 
     public void draw(Canvas canvas) {
         for(Asset asset : this.assets) {
             asset.draw(canvas);
+        }
+        for(Projectile proj : this.projectiles) {
+            proj.draw(canvas);
         }
     }
 

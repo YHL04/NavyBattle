@@ -3,6 +3,8 @@ package com.example.navybattle;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 public class Helicopter extends Asset {
 
     private GameSurface gameSurface;
@@ -23,25 +25,14 @@ public class Helicopter extends Asset {
         this.health = 10;
     }
 
-    public void update() {
+    public Projectile update(ArrayList<Asset> assets) {
         this.x += 4;
+        return null;
     }
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(this.bitmap, this.x, this.y, null);
         this.lastDrawNanoTime = System.nanoTime();
-    }
-
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public int getHealth() {
-        return this.health;
     }
 
 }

@@ -1,9 +1,10 @@
 package com.example.navybattle;
 
 
-import java.util.ArrayList;
-import android.view.MotionEvent;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
+
+import java.util.ArrayList;
 
 public class Game {
 

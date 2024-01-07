@@ -1,13 +1,10 @@
 package com.example.navybattle;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import java.util.ArrayList;
 
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -45,6 +42,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
         this.gameThread = new GameThread(this, holder);
         this.gameThread.setRunning(true);
         this.gameThread.start();
+
     }
 
     @Override
